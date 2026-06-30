@@ -1,0 +1,86 @@
+---
+import { getImage } from "astro:assets";
+import type { Photo } from "../lib/collections";
+
+interface Props {
+  photo: Photo;
+  /** First image of a page → eager + high priority (the LCP rule, §6). */
+  eager?: boolean;
+  /** Show the caption row beneath the photo. */
+  showCaption?: boolean;
+}
+
+const { photo, eager = false, showCaption = true } = Astro.props;
+const { src, alt, caption, index } = photo;
+
+// Candidate widths (brief §6). Never request more than the master's width,
+// so we never upscale; always include the master width as the ceiling.
+const TARGETS = [480, 960, 1440, 1920, 2400];
+const widths = [...new Set(TARGETS.filter((w) => w <= src.width).concat(src.width))].sort(
+  (a, b) => a - b
+);
+
+// Each device downloads a right-sized file: full viewport on mobile,
+// capped at the desktop ceiling otherwise.
+const sizes = "(min-width: 1240px) 1240px, 100vw";
+
+// Per-format quality (AVIF lower, JPEG higher) ≈ visually JPEG 85.
+const [avif, webp, jpeg] = await Promise.all([
+  getImage({ src, widths, format: "avif", quality: 65, sizes }),
+  getImage({ src, widths, format: "webp", quality: 80, sizes }),
+  getImage({ src, widths, format: "jpeg", quality: 85, sizes }),
+]);
+---
+
+<figure class="photo">
+  <picture>
+    <source type="image/avif" srcset={avif.srcSet.attribute} sizes={sizes} />
+    <source type="image/webp" srcset={webp.srcSet.attribute} sizes={sizes} />
+    <img
+      src={jpeg.src}
+      srcset={jpeg.srcSet.attribute}
+      sizes={sizes}
+      width={src.width}
+      height={src.height}
+      alt={alt}
+      loading={eager ? "eager" : "lazy"}
+      fetchpriority={eager ? "high" : "auto"}
+      decoding={eager ? "auto" : "async"}
+      style={`aspect-ratio:${src.width}/${src.height}`}
+    />
+  </picture>
+
+  {showCaption && caption && (
+    <figcaption class="caption">
+      <span class="caption-text">{caption}</span>
+    </figcaption>
+  )}
+</figure>
+
+<style>
+  .photo { margin: 0; }
+  .photo img {
+    width: 100%;
+    height: auto;
+    /* Cap height on tall portraits so they don't overflow the viewport,
+       while landscapes still fill the column width. */
+    max-height: 92dvh;
+    object-fit: contain;
+    background: color-mix(in srgb, var(--ink) 5%, transparent);
+  }
+  /* On desktop, portraits centre within the column rather than stretching. */
+  @media (min-width: 1000px) {
+    .photo img { max-height: 86dvh; margin-inline: auto; }
+  }
+  .caption {
+    display: flex;
+    gap: 0.85rem;
+    align-items: baseline;
+    margin-top: 0.85rem;
+    padding-inline: 0.1rem;
+  }
+  .caption-text {
+    font-size: 0.98rem;
+    color: var(--muted);
+  }
+</style>

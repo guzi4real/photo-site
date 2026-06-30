@@ -1,0 +1,16 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base title="Not found" description="That page doesn’t exist.">
+  <section class="nf">
+    <p class="eyebrow">404</p>
+    <h1 class="title">Nothing here</h1>
+    <p class="prose">That page doesn’t exist. <a href="/">Back to the gallery →</a></p>
+  </section>
+  <style>
+    .nf { max-width: var(--maxw-text); margin: clamp(4rem, 12vw, 8rem) auto; padding-inline: var(--gutter); }
+    .title { font-family: var(--font-ui); font-weight: 600; font-size: clamp(1.8rem, 6vw, 3rem); margin: 0.5rem 0 1rem; }
+    .prose a { text-decoration: underline; }
+  </style>
+</Base>

@@ -1,0 +1,75 @@
+---
+import { getImage } from "astro:assets";
+import Base from "../../layouts/Base.astro";
+import Photo from "../../components/Photo.astro";
+import { getCollections, getCollection } from "../../lib/collections";
+
+export function getStaticPaths() {
+  return getCollections().map((c) => ({ params: { slug: c.slug } }));
+}
+
+const { slug } = Astro.params;
+const collection = getCollection(slug!);
+if (!collection) return Astro.redirect("/404");
+
+const { title, description, metaLine, photos, cover, date } = collection;
+
+// A right-sized JPEG of the cover for the share preview.
+const og = await getImage({ src: cover, width: 1200, format: "jpeg", quality: 82 });
+
+const dateLabel = date
+  ? date.toLocaleDateString("en-GB", { year: "numeric", month: "long" })
+  : "";
+---
+
+<Base title={title} description={description || `${title} — a photo collection.`} ogImage={og.src} ogType="article">
+  <article class="collection">
+    <header class="head">
+      <p class="eyebrow">{dateLabel || "Collection"}</p>
+      <h1 class="title">{title}</h1>
+      {metaLine && <p class="meta-line metaline">{metaLine}</p>}
+      {description && <p class="prose desc">{description}</p>}
+    </header>
+
+    <div class="stream">
+      {photos.map((photo, i) => (
+        <div class="frame" id={`p-${photo.index}`}>
+          <Photo photo={photo} eager={i === 0} />
+        </div>
+      ))}
+    </div>
+  </article>
+
+  <style>
+    .head {
+      max-width: var(--maxw-photo);
+      margin: clamp(2rem, 6vw, 4rem) auto clamp(2.5rem, 7vw, 4.5rem);
+      padding-inline: var(--gutter);
+    }
+    .title {
+      font-family: var(--font-ui);
+      font-weight: 600;
+      font-size: clamp(1.7rem, 5vw, 2.7rem);
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+      margin-top: 0.5rem;
+    }
+    .metaline { margin-top: 0.9rem; }
+    .desc { margin-top: 1.1rem; }
+
+    .stream {
+      max-width: var(--maxw-photo);
+      margin: 0 auto;
+      padding-inline: var(--gutter);
+      display: flex;
+      flex-direction: column;
+      gap: var(--photo-gap);
+    }
+    /* On wide phones/landscape the gutter is wasted — let images breathe.
+       Mobile keeps a small gutter so portraits aren't edge-to-edge harsh. */
+    @media (max-width: 640px) {
+      .stream { padding-inline: clamp(0.4rem, 3vw, 1rem); }
+    }
+    .frame { scroll-margin-top: 5rem; }
+  </style>
+</Base>

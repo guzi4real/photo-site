@@ -1,0 +1,34 @@
+---
+import Base from "../layouts/Base.astro";
+import { SITE } from "../lib/site";
+---
+
+<Base title="About" description={`About ${SITE.name}.`}>
+  <section class="about">
+    <p class="eyebrow">About</p>
+    <div class="prose body">
+      <p>
+        {SITE.name} is a personal photography gallery — a quieter home for the work than
+        a feed. Photographs are gathered into rolls and shown large, in the order they
+        were taken.
+      </p>
+      <p>
+        Most frames are shot on film and scanned. New rolls are announced on
+        <a href={SITE.instagram} target="_blank" rel="me noopener">Instagram</a>; this is
+        where they live afterwards.
+      </p>
+      <p class="meta-line contact">Replace this copy in <code>src/pages/about.astro</code>.</p>
+    </div>
+  </section>
+
+  <style>
+    .about {
+      max-width: var(--maxw-text);
+      margin: clamp(3rem, 9vw, 6rem) auto;
+      padding-inline: var(--gutter);
+    }
+    .body { margin-top: 1rem; }
+    .contact { margin-top: 2rem; }
+    code { font-family: var(--font-mono); font-size: 0.85em; }
+  </style>
+</Base>
