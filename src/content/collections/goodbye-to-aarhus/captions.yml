@@ -1,0 +1,8 @@
+# filename -> { caption, alt }.  Both optional.
+# A blank/absent caption shows no caption row (and leaves no gap).
+010-harbour.jpg: { caption: "The harbour at dusk", alt: "Boats moored at a harbour under a fading sky" }
+020-doorway.jpg: { caption: "A doorway on Mejlgade", alt: "A weathered doorway in warm evening light" }
+030-rooftops.jpg: { caption: "", alt: "Rooftops against a pale sky" }   # no caption shown
+040-panorama.jpg: { caption: "Looking back across the bay" }
+050-stairwell.jpg: { caption: "The last stairwell", alt: "A narrow stairwell descending into shadow" }
+060-window.jpg: { caption: "Window, west-facing" }

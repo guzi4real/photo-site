@@ -1,0 +1,83 @@
+---
+import "../styles/global.css";
+import Nav from "../components/Nav.astro";
+import { SITE } from "../lib/site";
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Absolute or root-relative URL of the share image. */
+  ogImage?: string;
+  /** "website" | "article" */
+  ogType?: string;
+}
+
+const { title, description = SITE.description, ogImage, ogType = "website" } = Astro.props;
+
+const pageTitle = title === SITE.name ? SITE.name : `${title} · ${SITE.name}`;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImageUrl = ogImage ? new URL(ogImage, Astro.site).href : undefined;
+---
+
+<!doctype html>
+<html lang="en" data-theme="">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Open Graph: links shared to Instagram followers unfurl with a preview. -->
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+    <meta name="twitter:card" content={ogImageUrl ? "summary_large_image" : "summary"} />
+    {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <link rel="alternate" type="application/rss+xml" title={SITE.name} href="/rss.xml" />
+
+    <!-- Set theme before first paint to avoid a flash. -->
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem("theme");
+          if (t === "light" || t === "dark") {
+            document.documentElement.setAttribute("data-theme", t);
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Nav />
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <span class="meta-line">© {new Date().getFullYear()} {SITE.name}</span>
+      <a class="meta-line" href={SITE.instagram} target="_blank" rel="me noopener">Instagram ↗</a>
+    </footer>
+
+    <style>
+      .site-footer {
+        max-width: var(--maxw-photo);
+        margin: clamp(4rem, 12vw, 8rem) auto 0;
+        padding: 1.75rem var(--gutter);
+        border-top: 1px solid var(--line);
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+    </style>
+  </body>
+</html>

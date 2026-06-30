@@ -1,0 +1,76 @@
+# Sveltia CMS configuration.
+# Docs: https://github.com/sveltia/sveltia-cms
+#
+# ── Before this works you must set TWO things ───────────────────────────────
+#   1. backend.repo   → your "owner/repository"
+#   2. An auth method (pick ONE — see README §"Admin auth"):
+#        • GitHub OAuth via a tiny auth worker, OR
+#        • Cloudflare Access in front of /admin
+# ────────────────────────────────────────────────────────────────────────────
+
+backend:
+  name: github
+  repo: OWNER/REPOSITORY      # ← CHANGE THIS
+  branch: main
+  # base_url: https://your-auth-worker.example.workers.dev   # if using a GitHub OAuth worker
+
+# Edits become commits → Cloudflare Pages rebuilds (~1 min).
+publish_mode: simple
+
+# Global fallback only; each collection overrides this to be entry-relative.
+media_folder: src/content/uploads
+public_folder: /uploads
+
+collections:
+  - name: collections
+    label: Collections
+    label_singular: Collection
+    description: >-
+      A collection is a folder of photos. Create one, drag photos in, optionally
+      add captions, then Publish. Photos are shown in filename order.
+    folder: src/content/collections
+    # Each entry becomes <slug>/index.md ...
+    path: "{{slug}}/index"
+    # ... and its photos are committed into the SAME folder (entry-relative),
+    # which is exactly what the build scans.
+    media_folder: ""
+    public_folder: ""
+    create: true
+    slug: "{{slug}}"
+    summary: "{{title}} — {{fields.date | date('YYYY-MM-DD')}}"
+    sortable_fields: [title, date]
+    fields:
+      - { name: title, label: Title, widget: string }
+      - {
+          name: date,
+          label: Date,
+          widget: datetime,
+          date_format: "YYYY-MM-DD",
+          time_format: false,
+          required: false,
+        }
+      - {
+          name: meta_line,
+          label: "Meta line",
+          hint: "e.g. Kodak UltraMax 400 · Olympus OM-1N · Aarhus · June 2026",
+          widget: string,
+          required: false,
+        }
+      - { name: description, label: Description, widget: text, required: false }
+      - {
+          name: cover,
+          label: "Cover filename",
+          hint: "e.g. 010-name.jpg — leave blank to use the first photo",
+          widget: string,
+          required: false,
+        }
+      - name: photos
+        label: Photos
+        label_singular: Photo
+        widget: list
+        required: false
+        summary: "{{fields.file}} {{fields.caption}}"
+        fields:
+          - { name: file, label: Photo, widget: image, choose_url: false }
+          - { name: caption, label: Caption, widget: string, required: false }
+          - { name: alt, label: "Alt text", widget: string, required: false }

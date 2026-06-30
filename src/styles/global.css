@@ -1,0 +1,131 @@
+/* ============================================================
+   Design tokens — warm cream paper + safelight-red accent.
+   Single typeface (Archivo) throughout.
+   ============================================================ */
+
+:root {
+  /* light */
+  --bg: #f7f3ea;
+  --surface: #fffdf8;
+  --ink: #2a241a;
+  --muted: #8a7a55;
+  --faint: #a3935f;
+  --line: #ece2cd;
+  --line-strong: #e0d6bf;
+  --accent: #b23a2e;
+
+  /* type — single family */
+  --font-ui:   "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: var(--font-ui);
+  --font-mono: var(--font-ui);
+
+  /* layout */
+  --maxw-photo: 1240px;   /* desktop ceiling for the photo stream (brief §7) */
+  --maxw-text: 660px;     /* prose measure for About / descriptions */
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+  --photo-gap: clamp(3.5rem, 9vw, 7rem);
+
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --bg: #1a1611;
+  --surface: #221c15;
+  --ink: #efe7d6;
+  --muted: #b09a6e;
+  --faint: #80714f;
+  --line: #322a1f;
+  --line-strong: #423728;
+  --accent: #d8654f;
+  color-scheme: dark;
+}
+
+/* Follow the OS when the visitor hasn't chosen a theme. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1a1611;
+    --surface: #221c15;
+    --ink: #efe7d6;
+    --muted: #b09a6e;
+    --faint: #80714f;
+    --line: #322a1f;
+    --line-strong: #423728;
+    --accent: #d8654f;
+    color-scheme: dark;
+  }
+}
+
+/* ---- reset ---- */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100dvh;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+img { display: block; max-width: 100%; height: auto; }
+
+a {
+  color: inherit;
+  text-decoration: none;
+  text-underline-offset: 3px;
+  transition: opacity 0.15s ease;
+}
+a:hover { opacity: 0.62; }
+
+/* ---- shared primitives ---- */
+.eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.meta-line {
+  font-size: 0.74rem;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.prose {
+  font-size: 1.075rem;
+  line-height: 1.7;
+  color: var(--ink);
+  max-width: var(--maxw-text);
+}
+.prose p + p { margin-top: 1em; }
+
+/* visible keyboard focus everywhere (quality floor) */
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--ink);
+  color: var(--bg);
+  padding: 0.6rem 1rem;
+  z-index: 50;
+}
+.skip-link:focus { left: 0.5rem; top: 0.5rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

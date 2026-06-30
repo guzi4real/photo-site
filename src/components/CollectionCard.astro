@@ -1,0 +1,79 @@
+---
+import { getImage } from "astro:assets";
+import type { Collection } from "../lib/collections";
+
+interface Props {
+  collection: Collection;
+  eager?: boolean;
+}
+const { collection, eager = false } = Astro.props;
+const { slug, title, cover, date, photos } = collection;
+
+const sizes = "(min-width: 1000px) 400px, (min-width: 640px) 46vw, 92vw";
+const widths = [...new Set([480, 800, 1200].filter((w) => w <= cover.width).concat(cover.width))].sort(
+  (a, b) => a - b
+);
+const [avif, webp, jpeg] = await Promise.all([
+  getImage({ src: cover, widths, format: "avif", quality: 62, sizes }),
+  getImage({ src: cover, widths, format: "webp", quality: 78, sizes }),
+  getImage({ src: cover, widths, format: "jpeg", quality: 82, sizes }),
+]);
+
+const dateLabel = date ? date.toLocaleDateString("en-GB", { year: "numeric", month: "long" }) : "";
+const count = photos.length;
+---
+
+<a class="card" href={`/c/${slug}`}>
+  <div class="thumb">
+    <picture>
+      <source type="image/avif" srcset={avif.srcSet.attribute} sizes={sizes} />
+      <source type="image/webp" srcset={webp.srcSet.attribute} sizes={sizes} />
+      <img
+        src={jpeg.src}
+        srcset={jpeg.srcSet.attribute}
+        sizes={sizes}
+        width={cover.width}
+        height={cover.height}
+        alt={`Cover of ${title}`}
+        loading={eager ? "eager" : "lazy"}
+        fetchpriority={eager ? "high" : "auto"}
+        decoding={eager ? "auto" : "async"}
+      />
+    </picture>
+  </div>
+  <div class="label">
+    <h2 class="name">{title}</h2>
+    <span class="meta-line">{[dateLabel, `${count} ${count === 1 ? "photo" : "photos"}`].filter(Boolean).join(" · ")}</span>
+  </div>
+</a>
+
+<style>
+  .card { display: block; }
+  .card:hover { opacity: 1; }
+  .thumb {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--ink) 5%, transparent);
+  }
+  .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.4s ease;
+  }
+  .card:hover .thumb img { transform: scale(1.03); }
+  .label {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: 0.7rem;
+  }
+  .name {
+    font-family: var(--font-ui);
+    font-weight: 500;
+    font-size: 0.98rem;
+    letter-spacing: 0;
+  }
+  .card:hover .name { text-decoration: underline; text-underline-offset: 3px; }
+</style>
