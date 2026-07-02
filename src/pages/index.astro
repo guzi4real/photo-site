@@ -6,6 +6,10 @@ import { SITE } from "../lib/site";
 
 const collections = getCollections();
 
+// Split so "photographer" can be linked to the About page without hardcoding
+// the rest of the sentence twice.
+const [introBefore, introAfter] = SITE.intro.split("photographer");
+
 // Use the newest cover as the home-page share image.
 let og: string | undefined;
 if (collections[0]) {
@@ -17,7 +21,7 @@ if (collections[0]) {
 
 <Base title={SITE.name} description={SITE.description} ogImage={og}>
   <section class="intro">
-    <p class="prose lede">{SITE.intro}</p>
+    <p class="prose lede">{introBefore}<a class="photographer-link" href="/about">photographer</a>{introAfter}</p>
     <p class="meta-line follow">
       New work goes up on <a href={SITE.instagram} target="_blank" rel="me noopener">Instagram</a> first.
       {SITE.showAllFeed && <> Or browse <a href="/all">every photo →</a></>}
@@ -41,6 +45,11 @@ if (collections[0]) {
       padding-inline: var(--gutter);
     }
     .lede { font-size: clamp(1.25rem, 3.5vw, 1.75rem); line-height: 1.35; }
+    .photographer-link {
+      text-decoration: underline;
+      text-decoration-style: dotted;
+      text-underline-offset: 3px;
+    }
     .follow { margin-top: 1.2rem; }
     .follow a { text-decoration: underline; }
 

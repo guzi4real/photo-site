@@ -14,7 +14,7 @@ interface Props {
 
 const { title, description = SITE.description, ogImage, ogType = "website" } = Astro.props;
 
-const pageTitle = title === SITE.name ? SITE.name : `${title} · ${SITE.name}`;
+const pageTitle = title === SITE.name ? SITE.name : `${title} — ${SITE.name}`;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const ogImageUrl = ogImage ? new URL(ogImage, Astro.site).href : undefined;
 ---
@@ -64,7 +64,7 @@ const ogImageUrl = ogImage ? new URL(ogImage, Astro.site).href : undefined;
       <slot />
     </main>
     <footer class="site-footer">
-      <span class="meta-line">© {new Date().getFullYear()} {SITE.name}</span>
+      <span class="meta-line">© {new Date().getFullYear()} {SITE.author} · {SITE.name}</span>
       <a class="meta-line" href={SITE.instagram} target="_blank" rel="me noopener">Instagram ↗</a>
     </footer>
 

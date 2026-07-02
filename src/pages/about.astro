@@ -3,21 +3,27 @@ import Base from "../layouts/Base.astro";
 import { SITE } from "../lib/site";
 ---
 
-<Base title="About" description={`About ${SITE.name}.`}>
+<Base title="About" description="Who's responsible for all this, and why.">
   <section class="about">
     <p class="eyebrow">About</p>
     <div class="prose body">
       <p>
-        {SITE.name} is a personal photography gallery — a quieter home for the work than
-        a feed. Photographs are gathered into rolls and shown large, in the order they
-        were taken.
+      Photography is often described as a journey. Mine has mostly been a queue. I've spent years waiting to arrive at something, an artistic voice, a way of seeing, a body of work that explains itself, and the line has not moved in some time. Occasionally someone ahead of me finds theirs and leaves, which is nice for them.
       </p>
       <p>
-        Most frames are shot on film and scanned. New rolls are announced on
-        <a href={SITE.instagram} target="_blank" rel="me noopener">Instagram</a>; this is
-        where they live afterwards.
+      The frustrating part isn't the failing. Failing is straightforward and I've become very good at it. The frustrating part is the almost. The photo that would have been great if I'd been one step to the left. The project that made perfect sense until the third week. The voice that I can faintly hear in other people's work, clear as a bell, and never in my own.
       </p>
-      <p class="meta-line contact">Replace this copy in <code>src/pages/about.astro</code>.</p>
+      <p>
+      For a long time I made it worse by studying the masters, which is what you're supposed to do. Nobody mentions that it's like learning to cook by dining at restaurants you'll never be able to afford again. You come home to your own kitchen, look at what's in the fridge, and quietly lower your expectations.
+      </p>
+      <p>
+      I've since given up the comparing, officially at least. Unofficially it waits for me in every photo book I open, and I own rather a lot of photo books. Now I just photograph when something asks to be photographed. Some weeks nothing asks. Those weeks the world goes undocumented, at least by me, and I feel the particular guilt of a lapsed diarist.
+      </p>
+      <p>
+      I'd like to end this with a hard-won insight. I don't have one. I have a camera, a wall I keep walking into, and the suspicion that the wall is the work. I'll let you know.
+      </p>
+
+      <p class="signoff">— {SITE.author}</p>
     </div>
   </section>
 
@@ -29,6 +35,11 @@ import { SITE } from "../lib/site";
     }
     .body { margin-top: 1rem; }
     .contact { margin-top: 2rem; }
+    .signoff {
+      margin-top: 1.5rem;
+      font-size: 0.92em;
+      color: var(--muted);
+    }
     code { font-family: var(--font-mono); font-size: 0.85em; }
   </style>
 </Base>

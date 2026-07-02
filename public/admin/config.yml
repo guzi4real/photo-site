@@ -10,7 +10,7 @@
 
 backend:
   name: github
-  repo: OWNER/REPOSITORY      # ← CHANGE THIS
+  repo: guzi4real/photo-site      # ← CHANGE THIS -- changed!
   branch: main
   # base_url: https://your-auth-worker.example.workers.dev   # if using a GitHub OAuth worker
 

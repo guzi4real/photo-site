@@ -3,13 +3,15 @@
 // ----------------------------------------------------------------------------
 export const SITE = {
   /** Shown as the wordmark and in <title>. */
-  name: "Studio",
+  name: "The Wall Is the Work",
+  /** Shown in the footer copyright line and the About page sign-off. */
+  author: "Georges Gavanas",
   /** One-line intro on the home page + default meta description. */
-  description: "A personal photography gallery.",
+  description: "Decades of street photographs. Artistic voice still at large.",
   /** Home-page intro sentence (can differ from description). */
-  intro: "Film and light, gathered into rolls.",
+  intro: "Nothing here explains itself, least of all the photographer.",
   /** Your Instagram profile URL (the “new post” notifier). */
-  instagram: "https://instagram.com/yourhandle",
+  instagram: "https://instagram.com/guzi4real",
   /** Show the optional flat /all stream in the nav? */
   showAllFeed: true,
   /** Show the optional written-posts section? */
