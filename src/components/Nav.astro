@@ -3,11 +3,18 @@ import { SITE } from "../lib/site";
 
 const path = Astro.url.pathname;
 const isHome = path === "/";
+
+// Force a deliberate break between "Is" and "the" for the mobile two-line
+// lockup ("THE WALL IS" / "THE WORK"); desktop hides the <br> and stays one line.
+const wordmarkWords = SITE.name.split(" ");
+const wordmarkBreak = wordmarkWords.findIndex((w) => w.toLowerCase() === "is");
+const wordmarkLine1 = wordmarkBreak >= 0 ? wordmarkWords.slice(0, wordmarkBreak + 1).join(" ") : SITE.name;
+const wordmarkLine2 = wordmarkBreak >= 0 ? wordmarkWords.slice(wordmarkBreak + 1).join(" ") : "";
 ---
 
 <header class="nav">
   <a class="wordmark" href="/" aria-current={isHome ? "page" : undefined}>
-    <span class="dot"></span>{SITE.name}
+    <span class="dot"></span><span class="wordmark-text">{wordmarkLine1} {wordmarkLine2 && <><br />{wordmarkLine2}</>}</span>
   </a>
 
   <nav class="links" aria-label="Primary">
@@ -68,12 +75,23 @@ const isHome = path === "/";
     letter-spacing: 0.22em;
     text-transform: uppercase;
   }
+  .wordmark-text br { display: none; }
   .dot {
     width: 9px;
     height: 9px;
     border-radius: 50%;
     background: var(--accent);
     flex-shrink: 0;
+  }
+  @media (max-width: 600px) {
+    .wordmark { align-items: flex-start; }
+    .dot { margin-top: 0.2em; }
+    .wordmark-text {
+      letter-spacing: 0.16em;
+      line-height: 1.15;
+      white-space: nowrap;
+    }
+    .wordmark-text br { display: inline; }
   }
   .links {
     display: flex;
