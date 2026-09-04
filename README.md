@@ -119,6 +119,9 @@ Either way, set `backend.repo` in `public/admin/config.yml` to your `owner/repos
 
 ## Decisions still open (from the brief §10)
 
+> The build brief (`photo-site-implementation-plan.md`, referenced here as "the brief")
+> lives outside this repo, at `~/Documents/claude/photo-site-docs/`.
+
 - Domain name + registrar.
 - Hosting: Cloudflare Pages (default) vs Netlify.
 - Admin auth: Cloudflare Access (suggested) vs GitHub OAuth.
